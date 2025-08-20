@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   LabelList
 } from 'recharts';
-import { Home as HomeIcon, Wallet, Sun, Moon, PlusCircle, ArrowLeftCircle, Loader2, Menu } from 'lucide-react';
+import { Home as HomeIcon, Wallet, Sun, Moon, PlusCircle, ArrowLeftCircle, Loader2 } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
