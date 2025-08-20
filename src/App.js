@@ -193,6 +193,124 @@ const AccountDetailsPage = ({ account, baseCurrency, setPage }) => {
   );
 };
 
+// Component for adding/editing monthly data
+const MonthlyDataForm = ({ account, setEditingAccount, onSave }) => {
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
+  const [selectedMonth, setSelectedMonth] = useState('01');
+  const [selectedYear, setSelectedYear] = useState(String(currentYear));
+  const [openingBalance, setOpeningBalance] = useState('');
+  const [endingBalance, setEndingBalance] = useState('');
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    const monthYear = `${selectedYear}-${selectedMonth}`;
+    if (!openingBalance || !endingBalance) {
+      alert("Please fill in both opening and ending balances.");
+      return;
+    }
+    onSave(monthYear, openingBalance, endingBalance);
+    setOpeningBalance('');
+    setEndingBalance('');
+  };
+
+  return (
+    <div className="flex flex-col w-full h-full p-4">
+      <div className="flex items-center mb-4">
+        <button
+          onClick={() => setEditingAccount(null)}
+          className="p-2 mr-2 text-gray-500 dark:text-gray-400 hover:text-emerald-500 transition-colors duration-200 rounded-full"
+          aria-label="Go back to accounts list"
+        >
+          <ArrowLeftCircle size={24} />
+        </button>
+        <h2 className="text-3xl font-bold">Edit Monthly Data for {account.name}</h2>
+      </div>
+
+      <form onSubmit={handleSave} className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-inner mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div>
+            <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Month</label>
+            <select
+              id="month-select"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            >
+              {monthNames.map((name, index) => (
+                <option key={name} value={String(index + 1).padStart(2, '0')}>{name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
+            <select
+              id="year-select"
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            >
+              {years.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="opening" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opening ({account.currency})</label>
+            <input
+              type="number"
+              id="opening"
+              value={openingBalance}
+              onChange={(e) => setOpeningBalance(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              placeholder="e.g., 50000"
+            />
+          </div>
+          <div>
+            <label htmlFor="ending" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ending ({account.currency})</label>
+            <input
+              type="number"
+              id="ending"
+              value={endingBalance}
+              onChange={(e) => setEndingBalance(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              placeholder="e.g., 55000"
+            />
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="w-full px-6 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition-colors duration-200 shadow-md font-semibold"
+        >
+          Add/Update Month
+        </button>
+      </form>
+
+      <div>
+        <h3 className="text-xl font-semibold mb-3">Data for {account.name}</h3>
+        {account.monthlyData.length === 0 ? (
+          <p className="text-gray-500 dark:text-gray-400">No data has been entered for this account yet.</p>
+        ) : (
+          <ul className="space-y-3">
+            {account.monthlyData.map((data, index) => (
+              <li key={index} className="flex justify-between items-center bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                <div className="flex items-center space-x-3">
+                  <div>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{data.month}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                      Open: {getCurrencySymbol(account.currency)}{data.opening.toLocaleString()} | End: {getCurrencySymbol(account.currency)}{data.ending.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // Account List and Add/Edit Page
 const AccountsPage = ({ accounts, setAccounts, setPage, setSelectedAccount }) => {
   const [newAccountName, setNewAccountName] = useState('');
