@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   LabelList
 } from 'recharts';
-import { Home as HomeIcon, Wallet, Sun, Moon, PlusCircle, ArrowLeftCircle, Loader2 } from 'lucide-react';
+import { Home as HomeIcon, Wallet, Sun, Moon, PlusCircle, ArrowLeftCircle, Loader2, Menu } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -56,8 +56,8 @@ const HomePage = ({ chartData, accounts, baseCurrency, isLoadingRates }) => {
   return (
     <div className="flex flex-col w-full h-full p-4">
       <div className="flex flex-col items-center text-center">
-        <h2 className="text-3xl font-bold mb-2">Wealth Overview</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">Consolidated wealth across all accounts, converted to {baseCurrency}.</p>
+        <h2 className="text-xl md:text-3xl font-bold mb-2">Wealth Overview</h2>
+        <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400">Consolidated wealth across all accounts, converted to {baseCurrency}.</p>
       </div>
 
       <div className="w-full h-96 mt-8">
@@ -135,13 +135,13 @@ const AccountDetailsPage = ({ account, baseCurrency, setPage }) => {
         >
           <ArrowLeftCircle size={24} />
         </button>
-        <h2 className="text-3xl font-bold">Performance for {account.name}</h2>
+        <h2 className="text-xl md:text-3xl font-bold">Performance for {account.name}</h2>
       </div>
       
       {monthlyValuesData.length > 0 ? (
         <div className="w-full space-y-8">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-            <h3 className="text-xl font-semibold mb-4">Monthly Ending Balance</h3>
+            <h3 className="text-lg md:text-xl font-semibold mb-4">Monthly Ending Balance</h3>
             <div className="w-full h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyValuesData}>
@@ -161,7 +161,7 @@ const AccountDetailsPage = ({ account, baseCurrency, setPage }) => {
           </div>
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-            <h3 className="text-xl font-semibold mb-4">Monthly Change (Profit/Loss)</h3>
+            <h3 className="text-lg md:text-xl font-semibold mb-4">Monthly Change (Profit/Loss)</h3>
             <div className="w-full h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyChangeData}>
@@ -224,18 +224,18 @@ const MonthlyDataForm = ({ account, setEditingAccount, onSave }) => {
         >
           <ArrowLeftCircle size={24} />
         </button>
-        <h2 className="text-3xl font-bold">Edit Monthly Data for {account.name}</h2>
+        <h2 className="text-xl md:text-3xl font-bold">Edit Monthly Data for {account.name}</h2>
       </div>
 
       <form onSubmit={handleSave} className="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg shadow-inner mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <div>
-            <label htmlFor="month-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Month</label>
+            <label htmlFor="month-select" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Month</label>
             <select
               id="month-select"
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
               {monthNames.map((name, index) => (
                 <option key={name} value={String(index + 1).padStart(2, '0')}>{name}</option>
@@ -243,12 +243,12 @@ const MonthlyDataForm = ({ account, setEditingAccount, onSave }) => {
             </select>
           </div>
           <div>
-            <label htmlFor="year-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
+            <label htmlFor="year-select" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Year</label>
             <select
               id="year-select"
               value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             >
               {years.map((year) => (
                 <option key={year} value={year}>{year}</option>
@@ -256,24 +256,24 @@ const MonthlyDataForm = ({ account, setEditingAccount, onSave }) => {
             </select>
           </div>
           <div>
-            <label htmlFor="opening" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opening ({account.currency})</label>
+            <label htmlFor="opening" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opening ({account.currency})</label>
             <input
               type="number"
               id="opening"
               value={openingBalance}
               onChange={(e) => setOpeningBalance(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               placeholder="e.g., 50000"
             />
           </div>
           <div>
-            <label htmlFor="ending" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ending ({account.currency})</label>
+            <label htmlFor="ending" className="block text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ending ({account.currency})</label>
             <input
               type="number"
               id="ending"
               value={endingBalance}
               onChange={(e) => setEndingBalance(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="w-full px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               placeholder="e.g., 55000"
             />
           </div>
